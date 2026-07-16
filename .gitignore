@@ -1,0 +1,39 @@
+# Lazy.nvim
+lazy-lock.json
+
+# Plugin directories
+plugin/
+rplugin/
+
+# Compiled files
+*.o
+*.so
+*.a
+*.lib
+*.dll
+*.dylib
+
+# LSP and Mason directories
+.cache/
+.local/
+
+# Session and swap files
+.session
+*.swp
+*.swo
+*~
+.DS_Store
+
+# IDE/Editor specific
+.idea/
+.vscode/
+*.iml
+.netrwhist
+
+# OS specific
+Thumbs.db
+.DS_Store
+
+# Nvim specific
+.nvim/
+nvim-data/
