@@ -21,6 +21,16 @@ return {
 
 			telescope.setup({
 				defaults = {
+					vimgrep_arguments = {
+						"rg",
+						"--color=never",
+						"--no-heading",
+						"--with-filename",
+						"--line-number",
+						"--column",
+						"--smart-case",
+						"--hidden",
+					},
 					layout_config = {
 						horizontal = { prompt_position = "bottom" },
 					},
@@ -41,7 +51,6 @@ return {
 			map("n", "<leader>sf", builtin.find_files, { desc = "Find files" })
 			map("n", "<leader>sg", builtin.live_grep, { desc = "Live grep" })
 			map("n", "<leader>sw", builtin.grep_string, { desc = "Grep word under cursor" })
-			map("n", "<leader>sr", builtin.resume, { desc = "Resume last search" })
 			map("n", "<leader>s.", builtin.oldfiles, { desc = "Old files" })
 			map("n", "<leader>sh", builtin.help_tags, { desc = "Help tags" })
 			map("n", "<leader>sk", builtin.keymaps, { desc = "Keymaps" })
