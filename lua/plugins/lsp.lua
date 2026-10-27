@@ -48,6 +48,18 @@ return {
 				jdtls = {},
 				rust_analyzer = {},
 				clangd = {},
+				tailwindcss = {
+					settings = {
+						tailwindCSS = {
+							experimental = {
+								classRegex = {
+									{ "cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*)[^\"'`]*[\"'`]" },
+									{ "cx\\(([^)]*)\\)", "(?:[\"'`]([^\"'`]*)[^\"'`]*[\"'`]|(\\w+))" },
+								},
+							},
+						},
+					},
+				},
 			}
 
 			local ok_mason, mason = pcall(require, "mason")
@@ -68,6 +80,7 @@ return {
 				"prettier",
 				"ktfmt",
 				"google-java-format",
+				"tailwindcss-language-server",
 			}
 
 			local ok_mti, mti = pcall(require, "mason-tool-installer")
@@ -106,6 +119,7 @@ return {
 				"jdtls",
 				"rust_analyzer",
 				"clangd",
+				"tailwindcss",
 			})
 
 			local ok_mlsp, mlsp = pcall(require, "mason-lspconfig")
