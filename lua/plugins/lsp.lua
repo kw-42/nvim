@@ -18,7 +18,6 @@ return {
 			},
 		},
 		config = function()
-			-- LSP setup with Mason and Mason LSP Config
 			local capabilities = vim.tbl_deep_extend(
 				"force",
 				vim.lsp.protocol.make_client_capabilities(),
@@ -38,6 +37,13 @@ return {
 					},
 				},
 				ts_ls = {},
+				eslint = {},
+				oxlint = {
+					root_dir = function(fname)
+						local util = require("lspconfig.util")
+						return util.root_pattern(".oxlintrc.json", "oxlint.json")(fname)
+					end,
+				},
 				kotlin_language_server = {},
 				jdtls = {},
 				rust_analyzer = {},
@@ -52,6 +58,8 @@ return {
 			local ensure_installed = {
 				"lua-language-server",
 				"typescript-language-server",
+				"eslint-lsp",
+				"oxlint",
 				"kotlin-language-server",
 				"jdtls",
 				"rust-analyzer",
@@ -80,16 +88,8 @@ return {
 						vim.notify("mason: installing " .. pkg_name .. " (background)", vim.log.levels.INFO)
 					end
 				end
-			else
-				vim.schedule(function()
-					vim.notify(
-						"mason-registry not available; missing tools won't be auto-installed",
-						vim.log.levels.WARN
-					)
-				end)
 			end
 
-			-- Setup servers using the new vim.lsp.config API
 			for server_name, server_config in pairs(servers) do
 				local server = vim.tbl_deep_extend("force", server_config, {
 					capabilities = vim.tbl_deep_extend("force", capabilities, server_config.capabilities or {}),
@@ -97,16 +97,22 @@ return {
 				vim.lsp.config(server_name, server)
 			end
 
-			-- Enable all configured servers
-			vim.lsp.enable({ "lua_ls", "ts_ls", "kotlin_language_server", "jdtls", "rust_analyzer", "clangd" })
+			vim.lsp.enable({
+				"lua_ls",
+				"ts_ls",
+				"eslint",
+				"oxlint",
+				"kotlin_language_server",
+				"jdtls",
+				"rust_analyzer",
+				"clangd",
+			})
 
-			-- Setup mason-lspconfig for auto-installation
 			local ok_mlsp, mlsp = pcall(require, "mason-lspconfig")
 			if ok_mlsp then
 				mlsp.setup({})
 			end
 
-			-- Diagnostic signs and configuration
 			vim.fn.sign_define("DiagnosticSignError", { text = "E", texthl = "DiagnosticSignError" })
 			vim.fn.sign_define("DiagnosticSignWarn", { text = "W", texthl = "DiagnosticSignWarn" })
 			vim.fn.sign_define("DiagnosticSignHint", { text = "H", texthl = "DiagnosticSignHint" })
@@ -122,7 +128,14 @@ return {
 		end,
 	},
 
-	-- Completion with nvim-cmp and LuaSnip
+	{
+		"windwp/nvim-ts-autotag",
+		event = "InsertEnter",
+		config = function()
+			require("nvim-ts-autotag").setup()
+		end,
+	},
+
 	{
 		"hrsh7th/nvim-cmp",
 		event = "InsertEnter",
@@ -130,13 +143,16 @@ return {
 			"hrsh7th/cmp-nvim-lsp",
 			"hrsh7th/cmp-buffer",
 			"hrsh7th/cmp-path",
-			{ "L3MON4D3/LuaSnip" },
+			{
+				"L3MON4D3/LuaSnip",
+				dependencies = { "rafamadriz/friendly-snippets" },
+			},
 			"saadparwaiz1/cmp_luasnip",
 			{
 				"windwp/nvim-autopairs",
 				opts = {
 					fast_wrap = {},
-					disable_filetipe = { "TelescopePrompt", "vim" },
+					disable_filetype = { "TelescopePrompt", "vim" },
 				},
 			},
 		},
@@ -144,6 +160,8 @@ return {
 			local cmp = require("cmp")
 			local luasnip = require("luasnip")
 			local autopairs = require("nvim-autopairs")
+
+			require("luasnip.loaders.from_vscode").lazy_load()
 
 			luasnip.config.setup({})
 			autopairs.setup({})
@@ -167,6 +185,8 @@ return {
 					["<Tab>"] = cmp.mapping(function(fallback)
 						if cmp.visible() then
 							cmp.confirm({ select = true })
+						elseif luasnip.expand_or_locally_jumpable() then
+							luasnip.expand_or_jump()
 						else
 							fallback()
 						end

@@ -20,7 +20,7 @@ return {
 					max_height = 0.8,
 				},
 				constrain_cursor = "editable",
-				watch_for_changes = false,
+				watch_for_changes = true,
 				cleanup_delay_ms = 2000,
 				keymaps = {
 					["q"] = "actions.close",

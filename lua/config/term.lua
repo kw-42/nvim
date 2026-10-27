@@ -65,7 +65,7 @@ function M.setup_keymaps()
 	local map = vim.keymap.set
 
 	map("n", "<leader>tb", M.toggle_bottom, { desc = "Terminal bottom" })
-	map("n", "<leader>tf", M.toggle_float, { desc = "Terminal floating" })
+	map("n", "<leader>tt", M.toggle_float, { desc = "Terminal floating" })
 	map("n", "<leader>tr", M.toggle_right, { desc = "Terminal right" })
 
 	map("t", "<Esc><Esc>", [[<C-\><C-n>]], { desc = "Terminal normal mode" })

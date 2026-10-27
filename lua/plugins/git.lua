@@ -31,7 +31,8 @@ return {
 		cmd = { "Git", "G" },
 		keys = {
 			{ "<leader>gs", "<cmd>Git<CR>", desc = "Git status" },
-			{ "<leader>gD", "<cmd>Gvdiff<CR>", desc = "Git diff (fugitive)" },
+			{ "<leader>gd", "<cmd>Gvdiff<CR>", desc = "Git diff (fugitive)" },
+			{ "<leader>gD", "<cmd>Gvdiffsplit!<CR>", desc = "Git diff split (fugitive)" },
 			{ "<leader>gl", "<cmd>Git log --oneline<CR>", desc = "Git log" },
 			{ "<leader>gP", "<cmd>Git push<CR>", desc = "Git push" },
 			{ "<leader>gF", "<cmd>Git pull<CR>", desc = "Git pull" },
